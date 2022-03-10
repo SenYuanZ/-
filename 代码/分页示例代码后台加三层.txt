@@ -1,0 +1,39 @@
+//·ÃÎÊ²ã´úÂë
+        public SqlDataReader GetBooksAllPage(int pageIndex) {
+            string sql = "select top 10 * from Books where Id not in(select top("+(pageIndex-1)*10+") Id from Books order by Id) order by Id";
+            SqlDataReader reader = SqlHelper.ExecuteReader(SqlHelper.ConnectionString,CommandType.Text,sql,null);
+            return reader;
+        }
+
+
+
+
+
+ //Âß¼­²ã´úÂë
+        public List<Books> GetBooksAllPage(int pageIndex) {
+            SqlDataReader reader = bookdal.GetBooksAllPage(pageIndex);
+            List<Books> list = new List<Books>();
+            while (reader.Read()) {
+                Books book = new Books();
+                book.Id = Convert.ToInt32(reader["Id"]);
+                book.Title = reader["Title"].ToString();
+                book.ContentDescription = reader["ContentDescription"].ToString();
+                list.Add(book);
+            }
+            reader.Close();
+            return list;
+        }
+
+
+
+
+//·ÖÒ³¿ØÖÆÆ÷´úÂë
+        public ActionResult BookList() {
+            int pageIndex = RouteData.Values["Id"] != null ? Convert.ToInt32(RouteData.Values["Id"]) : 1;
+            List<Books> list = bookbll.GetBooksAllPage(pageIndex);
+            ViewData["pageIndex"] = pageIndex;
+            return View(list);
+        }
+
+
+

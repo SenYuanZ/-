@@ -1,0 +1,35 @@
+<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<List<TestMVCModel.Books>>" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<%@ Import Namespace="TestMVCModel" %>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>BookList</title>
+</head>
+<body>
+    <div>
+        <%
+            List<Books> list = Model;
+            int pageIndex = Convert.ToInt32(ViewData["pageIndex"]);
+            for (int i = 0; i < list.Count; i++)
+            {
+                Books book = list[i];
+                
+        %>
+        <div><%=book.Title %></div>
+
+        <%} %>
+        <div>
+            <%if (pageIndex == 1)
+              { %>
+                上一页
+            <%}
+              else
+              { %>
+            <a href='<%=Url.Content("Home/BookList/"+(pageIndex-1)) %>'>上一页</a>
+            <%} %>
+            <a href='<%=Url.Content("Home/BookList/"+(pageIndex+1)) %>'>下一页</a>
+        </div>
+    </div>
+</body>
+</html>
